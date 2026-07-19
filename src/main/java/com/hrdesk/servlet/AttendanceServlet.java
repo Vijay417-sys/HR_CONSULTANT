@@ -36,23 +36,20 @@ public class AttendanceServlet extends HttpServlet {
         if (action == null)
             action = "list";
 
-        switch (action) {
-            case "my":
-                // Employee's own attendance
-                List<AttendanceDTO> myAttendance = attendanceDAO.getAttendanceByEmployee(user.getEmployeeId());
-                request.setAttribute("attendanceList", myAttendance);
-                request.getRequestDispatcher("/employee/my-attendance.jsp").forward(request, response);
-                break;
-            case "delete":
-                int delId = Integer.parseInt(request.getParameter("id"));
-                attendanceDAO.deleteAttendance(delId);
-                response.sendRedirect(request.getContextPath() + "/attendance?action=list");
-                return;
-            default:
-                // Admin list all
-                List<AttendanceDTO> all = attendanceDAO.getAllAttendance();
-                request.setAttribute("attendanceList", all);
-                request.getRequestDispatcher("/admin/attendance-report.jsp").forward(request, response);
+        if (action.equals("my")) {
+            // Employee's own attendance
+            List<AttendanceDTO> myAttendance = attendanceDAO.getAttendanceByEmployee(user.getEmployeeId());
+            request.setAttribute("attendanceList", myAttendance);
+            request.getRequestDispatcher("/employee/my-attendance.jsp").forward(request, response);
+        } else if (action.equals("delete")) {
+            int delId = Integer.parseInt(request.getParameter("id"));
+            attendanceDAO.deleteAttendance(delId);
+            response.sendRedirect(request.getContextPath() + "/attendance?action=list");
+        } else {
+            // Admin list all
+            List<AttendanceDTO> all = attendanceDAO.getAllAttendance();
+            request.setAttribute("attendanceList", all);
+            request.getRequestDispatcher("/admin/attendance-report.jsp").forward(request, response);
         }
     }
 
