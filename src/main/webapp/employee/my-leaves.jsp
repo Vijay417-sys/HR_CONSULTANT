@@ -32,7 +32,7 @@
             <p class="text-xs text-gray-400">Rejected</p>
         </div>
     </div>
-    <a href="<%= request.getContextPath() %>/leave/apply" class="btn-primary no-underline">+ Apply Leave</a>
+    <a href="<%= request.getContextPath() %>/leave?action=apply" class="btn-primary no-underline">+ Apply Leave</a>
 </div>
 
 <div class="card" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
@@ -74,7 +74,7 @@
                         <div class="flex flex-col items-center gap-2">
                             <svg class="w-10 h-10 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             <p class="text-sm text-gray-400">You haven't applied for any leaves yet.</p>
-                            <a href="<%= request.getContextPath() %>/leave/apply" class="text-sm text-indigo-600 font-medium hover:underline">Apply for leave →</a>
+                            <a href="<%= request.getContextPath() %>/leave?action=apply" class="text-sm text-indigo-600 font-medium hover:underline">Apply for leave →</a>
                         </div>
                     </td>
                 </tr>

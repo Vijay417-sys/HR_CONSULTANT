@@ -26,7 +26,7 @@
             <% if (errorMsg != null) { %>
             <div class="bg-red-50 border border-red-200 text-red-700 px-3 py-2.5 rounded-lg mb-4 text-xs"><%= errorMsg %></div>
             <% } %>
-            <form action="<%= request.getContextPath() %>/dept/add" method="post" class="space-y-4">
+            <form action="<%= request.getContextPath() %>/dept?action=add" method="post" class="space-y-4">
                 <div>
                     <label class="input-label" for="departmentName">Department Name *</label>
                     <input type="text" id="departmentName" name="departmentName" class="input-field" placeholder="e.g. Engineering" required>
@@ -79,7 +79,7 @@
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs text-gray-400">ID: <%= dept.getDepartmentId() %></span>
                                     <span class="text-gray-200">|</span>
-                                    <a href="<%= request.getContextPath() %>/dept/delete?id=<%= dept.getDepartmentId() %>" class="text-xs text-red-500 font-medium hover:text-red-700 no-underline" onclick="return confirm('Delete this department? This may affect associated employees.')">Delete</a>
+                                    <a href="<%= request.getContextPath() %>/dept?action=delete&id=<%= dept.getDepartmentId() %>" class="text-xs text-red-500 font-medium hover:text-red-700 no-underline" onclick="return confirm('Delete this department? This may affect associated employees.')">Delete</a>
                                 </div>
                             </td>
                         </tr>

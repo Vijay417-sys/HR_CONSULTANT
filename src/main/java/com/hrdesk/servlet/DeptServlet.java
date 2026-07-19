@@ -6,7 +6,6 @@ import java.util.List;
 import com.hrdesk.dao.DeptDAO;
 import com.hrdesk.daoimp.DeptDAOImp;
 import com.hrdesk.dto.DeptDTO;
-import com.hrdesk.dto.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/dept/*")
+@WebServlet("/dept")
 public class DeptServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -31,15 +30,15 @@ public class DeptServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/list";
+            action = "list";
 
         switch (action) {
-            case "/delete":
+            case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
                 deptDAO.deleteDepartment(delId);
-                response.sendRedirect(request.getContextPath() + "/dept/list");
+                response.sendRedirect(request.getContextPath() + "/dept?action=list");
                 return;
             default:
                 List<DeptDTO> departments = deptDAO.getAllDepartments();
@@ -58,9 +57,9 @@ public class DeptServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/add";
+            action = "add";
 
         DeptDTO dept = new DeptDTO();
         String idStr = request.getParameter("departmentId");
@@ -81,6 +80,6 @@ public class DeptServlet extends HttpServlet {
         } else {
             session.setAttribute("errorMsg", "Failed to save department.");
         }
-        response.sendRedirect(request.getContextPath() + "/dept/list");
+        response.sendRedirect(request.getContextPath() + "/dept?action=list");
     }
 }

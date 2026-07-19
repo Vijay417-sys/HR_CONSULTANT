@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebFilter(urlPatterns = {"/admin/*", "/employee/*", "/employees/*"})
+@WebFilter(urlPatterns = {"/admin/*", "/employee/*"})
 public class AuthFilter implements Filter {
 
     @Override

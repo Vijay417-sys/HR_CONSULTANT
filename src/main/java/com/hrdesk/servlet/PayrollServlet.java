@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/payroll/*")
+@WebServlet("/payroll")
 public class PayrollServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -36,21 +36,21 @@ public class PayrollServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/list";
+            action = "list";
 
         switch (action) {
-            case "/my":
+            case "my":
                 // Employee's own payslips
                 List<PayrollDTO> myPayroll = payrollDAO.getPayrollByEmployee(user.getEmployeeId());
                 request.setAttribute("payrollList", myPayroll);
                 request.getRequestDispatcher("/employee/my-payslip.jsp").forward(request, response);
                 break;
-            case "/delete":
+            case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
                 payrollDAO.deletePayroll(delId);
-                response.sendRedirect(request.getContextPath() + "/payroll/list");
+                response.sendRedirect(request.getContextPath() + "/payroll?action=list");
                 return;
             default:
                 // Admin — list all payroll + load employees for form
@@ -72,11 +72,11 @@ public class PayrollServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/generate";
+            action = "generate";
 
-        if ("/generate".equals(action) || "/add".equals(action)) {
+        if ("generate".equals(action) || "add".equals(action)) {
             PayrollDTO payroll = new PayrollDTO();
 
             String empIdStr = request.getParameter("employeeId");
@@ -103,7 +103,7 @@ public class PayrollServlet extends HttpServlet {
             } else {
                 session.setAttribute("errorMsg", "Failed to generate payroll.");
             }
-            response.sendRedirect(request.getContextPath() + "/payroll/list");
+            response.sendRedirect(request.getContextPath() + "/payroll?action=list");
         } else {
             doGet(request, response);
         }

@@ -105,8 +105,8 @@
                     <td>
                         <% if ("PENDING".equals(lv.getLeaveStatus()) || lv.getLeaveStatus() == null) { %>
                         <div class="flex gap-1.5">
-                            <a href="<%= request.getContextPath() %>/leave/approve?id=<%= lv.getLeaveId() %>" class="btn-success no-underline" style="padding:.25rem .625rem;font-size:.75rem;" onclick="return confirm('Approve this leave?')">Approve</a>
-                            <a href="<%= request.getContextPath() %>/leave/reject?id=<%= lv.getLeaveId() %>" class="btn-danger no-underline" style="padding:.25rem .625rem;font-size:.75rem;" onclick="return confirm('Reject this leave?')">Reject</a>
+                            <a href="<%= request.getContextPath() %>/leave?action=approve&id=<%= lv.getLeaveId() %>" class="btn-success no-underline" style="padding:.25rem .625rem;font-size:.75rem;" onclick="return confirm('Approve this leave?')">Approve</a>
+                            <a href="<%= request.getContextPath() %>/leave?action=reject&id=<%= lv.getLeaveId() %>" class="btn-danger no-underline" style="padding:.25rem .625rem;font-size:.75rem;" onclick="return confirm('Reject this leave?')">Reject</a>
                         </div>
                         <% } else { %>
                         <span class="text-xs text-gray-400">—</span>

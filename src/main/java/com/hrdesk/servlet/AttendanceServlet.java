@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/attendance/*")
+@WebServlet("/attendance")
 public class AttendanceServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -32,21 +32,21 @@ public class AttendanceServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/list";
+            action = "list";
 
         switch (action) {
-            case "/my":
+            case "my":
                 // Employee's own attendance
                 List<AttendanceDTO> myAttendance = attendanceDAO.getAttendanceByEmployee(user.getEmployeeId());
                 request.setAttribute("attendanceList", myAttendance);
                 request.getRequestDispatcher("/employee/my-attendance.jsp").forward(request, response);
                 break;
-            case "/delete":
+            case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
                 attendanceDAO.deleteAttendance(delId);
-                response.sendRedirect(request.getContextPath() + "/attendance/list");
+                response.sendRedirect(request.getContextPath() + "/attendance?action=list");
                 return;
             default:
                 // Admin list all
@@ -66,11 +66,11 @@ public class AttendanceServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/mark";
+            action = "mark";
 
-        if ("/mark".equals(action)) {
+        if ("mark".equals(action)) {
             AttendanceDTO att = new AttendanceDTO();
 
             String empIdStr = request.getParameter("empId");
@@ -110,7 +110,7 @@ public class AttendanceServlet extends HttpServlet {
             } else {
                 session.setAttribute("errorMsg", "Failed to mark attendance.");
             }
-            response.sendRedirect(request.getContextPath() + "/attendance/list");
+            response.sendRedirect(request.getContextPath() + "/attendance?action=list");
         } else {
             doGet(request, response);
         }

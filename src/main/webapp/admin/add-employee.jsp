@@ -37,7 +37,7 @@
             <h3 class="text-sm font-semibold text-gray-900"><%= isEdit ? "Edit Employee" : "Add New Employee" %></h3>
             <p class="text-xs text-gray-400 mt-0.5"><%= isEdit ? "Update employee details." : "Fill in the details to add a new employee to the system." %></p>
         </div>
-        <form action="<%= request.getContextPath() %>/employees/<%= isEdit ? "edit" : "add" %>" method="post" class="p-6 space-y-5">
+        <form action="<%= request.getContextPath() %>/employee?action=<%= isEdit ? "edit" : "add" %>" method="post" class="p-6 space-y-5">
             <% if (isEdit) { %>
             <input type="hidden" name="employeeId" value="<%= editEmployee.getEmployeeId() %>">
             <% } %>
@@ -115,7 +115,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     <%= isEdit ? "Update Employee" : "Add Employee" %>
                 </button>
-                <a href="<%= request.getContextPath() %>/employees/list" class="btn-secondary no-underline">Cancel</a>
+                <a href="<%= request.getContextPath() %>/employee?action=list" class="btn-secondary no-underline">Cancel</a>
             </div>
         </form>
     </div>

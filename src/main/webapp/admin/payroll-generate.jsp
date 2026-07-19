@@ -40,7 +40,7 @@
     <div class="lg:col-span-1">
         <div class="card p-6 mb-5" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
             <h3 class="text-sm font-semibold text-gray-900 mb-4">Generate Payroll</h3>
-            <form action="<%= request.getContextPath() %>/payroll/generate" method="post" class="space-y-4">
+            <form action="<%= request.getContextPath() %>/payroll?action=generate" method="post" class="space-y-4">
                 <div>
                     <label class="input-label" for="employeeId">Employee *</label>
                     <select id="employeeId" name="employeeId" class="input-field" required>
@@ -126,7 +126,7 @@
                             <td class="text-red-500">-₹<%= String.format("%,.0f", p.getDeduction()) %></td>
                             <td class="font-semibold text-gray-900">₹<%= String.format("%,.0f", p.getNetSalary()) %></td>
                             <td>
-                                <a href="<%= request.getContextPath() %>/payroll/delete?id=<%= p.getPayrollId() %>" class="text-xs text-red-500 hover:text-red-700 font-medium no-underline" onclick="return confirm('Delete this payroll record?')">Delete</a>
+                                <a href="<%= request.getContextPath() %>/payroll?action=delete&id=<%= p.getPayrollId() %>" class="text-xs text-red-500 hover:text-red-700 font-medium no-underline" onclick="return confirm('Delete this payroll record?')">Delete</a>
                             </td>
                         </tr>
                         <% } } else { %>

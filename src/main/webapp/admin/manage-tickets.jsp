@@ -91,12 +91,12 @@
                     <td>
                         <div class="flex gap-1.5 flex-wrap">
                             <% if ("OPEN".equals(t.getStatus())) { %>
-                            <a href="<%= request.getContextPath() %>/support/inprogress?id=<%= t.getTokenId() %>" class="btn-secondary no-underline" style="padding:.2rem .5rem;font-size:.7rem;">Start</a>
+                            <a href="<%= request.getContextPath() %>/support?action=inprogress&id=<%= t.getTokenId() %>" class="btn-secondary no-underline" style="padding:.2rem .5rem;font-size:.7rem;">Start</a>
                             <% } %>
                             <% if (!"RESOLVED".equals(t.getStatus()) && !"CLOSED".equals(t.getStatus())) { %>
-                            <a href="<%= request.getContextPath() %>/support/resolve?id=<%= t.getTokenId() %>" class="btn-success no-underline" style="padding:.2rem .5rem;font-size:.7rem;" onclick="return confirm('Mark as resolved?')">Resolve</a>
+                            <a href="<%= request.getContextPath() %>/support?action=resolve&id=<%= t.getTokenId() %>" class="btn-success no-underline" style="padding:.2rem .5rem;font-size:.7rem;" onclick="return confirm('Mark as resolved?')">Resolve</a>
                             <% } %>
-                            <a href="<%= request.getContextPath() %>/support/delete?id=<%= t.getTokenId() %>" class="btn-danger no-underline" style="padding:.2rem .5rem;font-size:.7rem;" onclick="return confirm('Delete this ticket?')">Del</a>
+                            <a href="<%= request.getContextPath() %>/support?action=delete&id=<%= t.getTokenId() %>" class="btn-danger no-underline" style="padding:.2rem .5rem;font-size:.7rem;" onclick="return confirm('Delete this ticket?')">Del</a>
                         </div>
                     </td>
                 </tr>

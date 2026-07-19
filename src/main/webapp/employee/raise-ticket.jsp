@@ -27,7 +27,7 @@
             <%= errorMsg %>
         </div>
         <% } %>
-        <form action="<%= request.getContextPath() %>/support/raise" method="post" class="space-y-5">
+        <form action="<%= request.getContextPath() %>/support?action=raise" method="post" class="space-y-5">
             <div>
                 <label class="input-label" for="category">Category *</label>
                 <select id="category" name="category" class="input-field" required>
@@ -61,7 +61,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                     Submit Ticket
                 </button>
-                <a href="<%= request.getContextPath() %>/support/my" class="btn-secondary no-underline">View My Tickets</a>
+                <a href="<%= request.getContextPath() %>/support?action=my" class="btn-secondary no-underline">View My Tickets</a>
             </div>
         </form>
     </div>

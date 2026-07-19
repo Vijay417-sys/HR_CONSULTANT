@@ -9,7 +9,6 @@ import com.hrdesk.daoimp.EmployeeDAOImp;
 import com.hrdesk.daoimp.DeptDAOImp;
 import com.hrdesk.dto.EmployeeDTO;
 import com.hrdesk.dto.DeptDTO;
-import com.hrdesk.dto.User;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/employees/*")
+@WebServlet("/employee")
 public class EmployeeServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -35,30 +34,30 @@ public class EmployeeServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/list";
+            action = "list";
 
         switch (action) {
-            case "/dashboard":
+            case "dashboard":
                 // Employee Dashboard – show logged-in employee's overview
                 request.getRequestDispatcher("/employee/dashboard.jsp").forward(request, response);
                 break;
-            case "/add":
+            case "add":
                 loadDepartments(request);
                 request.getRequestDispatcher("/admin/add-employee.jsp").forward(request, response);
                 break;
-            case "/edit":
+            case "edit":
                 int editId = Integer.parseInt(request.getParameter("id"));
                 EmployeeDTO emp = employeeDAO.getEmployeeById(editId);
                 request.setAttribute("employee", emp);
                 loadDepartments(request);
                 request.getRequestDispatcher("/admin/add-employee.jsp").forward(request, response);
                 break;
-            case "/delete":
+            case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
                 employeeDAO.deleteEmployee(delId);
-                response.sendRedirect(request.getContextPath() + "/employees/list");
+                response.sendRedirect(request.getContextPath() + "/employee?action=list");
                 break;
             default:
                 // /list
@@ -79,11 +78,11 @@ public class EmployeeServlet extends HttpServlet {
             return;
         }
 
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/add";
+            action = "add";
 
-        if ("/add".equals(action) || "/edit".equals(action)) {
+        if ("add".equals(action) || "edit".equals(action)) {
             EmployeeDTO emp = new EmployeeDTO();
 
             String idParam = request.getParameter("employeeId");
@@ -123,7 +122,7 @@ public class EmployeeServlet extends HttpServlet {
             } else {
                 request.getSession().setAttribute("errorMsg", "Failed to save employee. Please try again.");
             }
-            response.sendRedirect(request.getContextPath() + "/employees/list");
+            response.sendRedirect(request.getContextPath() + "/employee?action=list");
         } else {
             doGet(request, response);
         }

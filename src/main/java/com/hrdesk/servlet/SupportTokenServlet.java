@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/support/*")
+@WebServlet("/support")
 public class SupportTokenServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -32,40 +32,40 @@ public class SupportTokenServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getPathInfo();
-        if (action == null) action = "/list";
+        String action = request.getParameter("action");
+        if (action == null) action = "list";
 
         switch (action) {
-            case "/raise":
+            case "raise":
                 request.getRequestDispatcher("/employee/raise-ticket.jsp").forward(request, response);
                 break;
-            case "/my":
+            case "my":
                 List<SupportTokenDTO> myTokens = tokenDAO.getTokensByEmployee(user.getEmployeeId());
                 request.setAttribute("tokens", myTokens);
                 request.getRequestDispatcher("/employee/my-tickets.jsp").forward(request, response);
                 break;
-            case "/resolve":
+            case "resolve":
                 int resolveId = Integer.parseInt(request.getParameter("id"));
                 tokenDAO.updateTokenStatus(resolveId, "RESOLVED");
-                response.sendRedirect(request.getContextPath() + "/support/list");
+                response.sendRedirect(request.getContextPath() + "/support?action=list");
                 return;
-            case "/close":
+            case "close":
                 int closeId = Integer.parseInt(request.getParameter("id"));
                 tokenDAO.updateTokenStatus(closeId, "CLOSED");
-                response.sendRedirect(request.getContextPath() + "/support/list");
+                response.sendRedirect(request.getContextPath() + "/support?action=list");
                 return;
-            case "/inprogress":
+            case "inprogress":
                 int inProgressId = Integer.parseInt(request.getParameter("id"));
                 tokenDAO.updateTokenStatus(inProgressId, "IN_PROGRESS");
-                response.sendRedirect(request.getContextPath() + "/support/list");
+                response.sendRedirect(request.getContextPath() + "/support?action=list");
                 return;
-            case "/delete":
+            case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
                 tokenDAO.deleteToken(delId);
                 if ("ADMIN".equals(user.getRole())) {
-                    response.sendRedirect(request.getContextPath() + "/support/list");
+                    response.sendRedirect(request.getContextPath() + "/support?action=list");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/support/my");
+                    response.sendRedirect(request.getContextPath() + "/support?action=my");
                 }
                 return;
             default:
@@ -87,10 +87,10 @@ public class SupportTokenServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getPathInfo();
-        if (action == null) action = "/raise";
+        String action = request.getParameter("action");
+        if (action == null) action = "raise";
 
-        if ("/raise".equals(action)) {
+        if ("raise".equals(action)) {
             SupportTokenDTO token = new SupportTokenDTO();
             token.setEmpId(user.getEmployeeId());
             token.setTitle(request.getParameter("title"));
@@ -104,7 +104,7 @@ public class SupportTokenServlet extends HttpServlet {
             } else {
                 session.setAttribute("errorMsg", "Failed to raise ticket. Please try again.");
             }
-            response.sendRedirect(request.getContextPath() + "/support/my");
+            response.sendRedirect(request.getContextPath() + "/support?action=my");
         } else {
             doGet(request, response);
         }

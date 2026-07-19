@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/leave/*")
+@WebServlet("/leave")
 public class LeaveServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -32,34 +32,34 @@ public class LeaveServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/list";
+            action = "list";
 
         switch (action) {
-            case "/apply":
+            case "apply":
                 request.getRequestDispatcher("/employee/apply-leave.jsp").forward(request, response);
                 break;
-            case "/my":
+            case "my":
                 // Employee's own leaves
                 List<LeaveDTO> myLeaves = leaveDAO.getLeavesByEmployee(user.getEmployeeId());
                 request.setAttribute("leaves", myLeaves);
                 request.getRequestDispatcher("/employee/my-leaves.jsp").forward(request, response);
                 break;
-            case "/approve":
-            case "/reject":
+            case "approve":
+            case "reject":
                 int leaveId = Integer.parseInt(request.getParameter("id"));
-                String newStatus = "/approve".equals(action) ? "APPROVED" : "REJECTED";
+                String newStatus = "approve".equals(action) ? "APPROVED" : "REJECTED";
                 leaveDAO.updateLeaveStatus(leaveId, newStatus);
-                response.sendRedirect(request.getContextPath() + "/leave/list");
+                response.sendRedirect(request.getContextPath() + "/leave?action=list");
                 return;
-            case "/delete":
+            case "delete":
                 int delId = Integer.parseInt(request.getParameter("id"));
                 leaveDAO.deleteLeave(delId);
                 if ("ADMIN".equals(user.getRole())) {
-                    response.sendRedirect(request.getContextPath() + "/leave/list");
+                    response.sendRedirect(request.getContextPath() + "/leave?action=list");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/leave/my");
+                    response.sendRedirect(request.getContextPath() + "/leave?action=my");
                 }
                 return;
             default:
@@ -81,11 +81,11 @@ public class LeaveServlet extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("user");
-        String action = request.getPathInfo();
+        String action = request.getParameter("action");
         if (action == null)
-            action = "/apply";
+            action = "apply";
 
-        if ("/apply".equals(action)) {
+        if ("apply".equals(action)) {
             LeaveDTO leave = new LeaveDTO();
             leave.setEmployeeId(user.getEmployeeId());
             leave.setLeaveType(request.getParameter("leaveType"));
@@ -107,7 +107,7 @@ public class LeaveServlet extends HttpServlet {
             } else {
                 session.setAttribute("errorMsg", "Failed to submit leave. Please try again.");
             }
-            response.sendRedirect(request.getContextPath() + "/leave/my");
+            response.sendRedirect(request.getContextPath() + "/leave?action=my");
         } else {
             doGet(request, response);
         }

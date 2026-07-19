@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/dashboard");
             } else {
                 // Employee → Employee Dashboard
-                response.sendRedirect(request.getContextPath() + "/employees/dashboard");
+                response.sendRedirect(request.getContextPath() + "/employee?action=dashboard");
             }
         } else {
             request.setAttribute("error", "Invalid email or password. Please try again.");

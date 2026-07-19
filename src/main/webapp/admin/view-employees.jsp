@@ -37,7 +37,7 @@
             <input type="text" id="search-input" placeholder="Search employees..." class="input-field pl-9" style="width:220px;" oninput="filterTable(this.value)">
         </div>
     </div>
-    <a href="<%= request.getContextPath() %>/employees/add" class="btn-primary no-underline">
+    <a href="<%= request.getContextPath() %>/employee?action=add" class="btn-primary no-underline">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
         Add Employee
     </a>
@@ -96,7 +96,7 @@
                     <td><span class="badge <%= active ? "badge-green" : "badge-gray" %>"><%= emp.getStatus() != null ? emp.getStatus() : "ACTIVE" %></span></td>
                     <td>
                         <div class="flex items-center gap-2">
-                            <a href="<%= request.getContextPath() %>/employees/edit?id=<%= emp.getEmployeeId() %>" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium no-underline">Edit</a>
+                            <a href="<%= request.getContextPath() %>/employee?action=edit&id=<%= emp.getEmployeeId() %>" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium no-underline">Edit</a>
                             <span class="text-gray-200">|</span>
                             <button onclick="deleteEmployee(<%= emp.getEmployeeId() %>)" class="text-xs text-red-500 hover:text-red-700 font-medium bg-transparent border-none p-0 cursor-pointer">Delete</button>
                         </div>
@@ -108,7 +108,7 @@
                         <div class="flex flex-col items-center gap-2">
                             <svg class="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             <p class="text-sm text-gray-400 font-medium">No employees found</p>
-                            <a href="<%= request.getContextPath() %>/employees/add" class="text-sm text-indigo-600 font-medium hover:underline">Add your first employee →</a>
+                            <a href="<%= request.getContextPath() %>/employee?action=add" class="text-sm text-indigo-600 font-medium hover:underline">Add your first employee →</a>
                         </div>
                     </td>
                 </tr>
@@ -127,7 +127,7 @@ function filterTable(q) {
 }
 function deleteEmployee(id) {
     if (confirm('Delete this employee? This cannot be undone.')) {
-        window.location.href = '<%= request.getContextPath() %>/employees/delete?id=' + id;
+        window.location.href = '<%= request.getContextPath() %>/employee?action=delete&id=' + id;
     }
 }
 </script>
