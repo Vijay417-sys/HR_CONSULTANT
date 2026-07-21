@@ -9,6 +9,8 @@ public class EmployeeDTO {
 	private String lastName;
 	private String email;
 	private String phone;
+	private String gender;
+	private Date dob;
 	private String designation;
 	private Date hireDate;
 	private double salary;
@@ -52,6 +54,18 @@ public class EmployeeDTO {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public Date getDob() {
+		return dob;
+	}
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
 	public String getDesignation() {
 		return designation;
 	}
@@ -85,8 +99,9 @@ public class EmployeeDTO {
 	@Override
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", departmentId=" + departmentId + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", designation=" + designation
-				+ ", hireDate=" + hireDate + ", salary=" + salary + ", qrCode=" + qrCode + ", status=" + status + "]";
+				+ ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", gender=" + gender + ", dob=" + dob
+				+ ", designation=" + designation + ", hireDate=" + hireDate + ", salary=" + salary + ", qrCode=" + qrCode
+				+ ", status=" + status + "]";
 	}
 	
 }

@@ -31,10 +31,11 @@ public class AttendanceDAOImp implements AttendanceDAO {
         return att;
     }
 
-    // MARK
+    // MARK (INSERT or UPDATE if already exists for same employee + date)
     @Override
     public boolean markAttendance(AttendanceDTO att) {
-        String sql = "INSERT INTO attendance (emp_id, date, status, check_in, check_out) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO attendance (emp_id, date, status, check_in, check_out) VALUES (?, ?, ?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE status = VALUES(status), check_in = VALUES(check_in), check_out = VALUES(check_out)";
         try (Connection con = Connector.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 

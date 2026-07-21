@@ -5,6 +5,14 @@
     if (user == null) { response.sendRedirect(request.getContextPath() + "/login"); return; }
     List<AttendanceDTO> records = (List<AttendanceDTO>) request.getAttribute("attendanceList");
 
+    // Flash messages
+    String successMsg = (String) session.getAttribute("successMsg");
+    String errorMsg   = (String) session.getAttribute("errorMsg");
+    if (successMsg != null) session.removeAttribute("successMsg");
+    if (errorMsg   != null) session.removeAttribute("errorMsg");
+%>
+
+<%
     // Compute stats
     int present = 0, absent = 0, halfDay = 0;
     if (records != null) {
@@ -19,6 +27,20 @@
 %>
 <%@ include file="../includes/header.jsp" %>
 <script>document.getElementById('page-title').textContent='My Attendance';document.getElementById('page-breadcrumb').textContent='HRDesk / Employee / Attendance';</script>
+
+<!-- Flash Messages -->
+<% if (successMsg != null) { %>
+<div class="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 text-sm">
+    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <%= successMsg %>
+</div>
+<% } %>
+<% if (errorMsg != null) { %>
+<div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <%= errorMsg %>
+</div>
+<% } %>
 
 <!-- Summary Stats -->
 <div class="grid grid-cols-4 gap-5 mb-7">

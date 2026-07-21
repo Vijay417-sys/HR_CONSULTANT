@@ -27,7 +27,9 @@ public class EmployeeDAOImp implements EmployeeDAO {
         }
         emp.setEmail(rs.getString("email"));
         emp.setPhone(rs.getString("phone"));
-        emp.setDesignation(rs.getString("role")); // using role as designation proxy
+        emp.setGender(rs.getString("gender"));
+        emp.setDob(rs.getDate("dob"));
+        emp.setDesignation(rs.getString("designation"));
         emp.setHireDate(rs.getDate("hire_date"));
         emp.setSalary(rs.getDouble("salary"));
         emp.setStatus(rs.getString("status"));
@@ -37,9 +39,9 @@ public class EmployeeDAOImp implements EmployeeDAO {
     // ADD
     @Override
     public boolean addEmployee(EmployeeDTO emp) {
-        String sql = "INSERT INTO employees (full_name, email, phone, hire_date, salary, dept_id, role, password_hash, status) "
+        String sql = "INSERT INTO employees (full_name, email, phone, gender, dob, hire_date, salary, dept_id, designation, role, password_hash, status) "
                 +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE')";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'EMPLOYEE', ?, 'ACTIVE')";
         try (Connection con = Connector.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -48,11 +50,13 @@ public class EmployeeDAOImp implements EmployeeDAO {
             ps.setString(1, fullName.trim());
             ps.setString(2, emp.getEmail());
             ps.setString(3, emp.getPhone());
-            ps.setDate(4, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
-            ps.setDouble(5, emp.getSalary());
-            ps.setInt(6, emp.getDepartmentId());
-            ps.setString(7, emp.getDesignation() != null ? emp.getDesignation() : "EMPLOYEE");
-            ps.setString(8, emp.getQrCode() != null ? emp.getQrCode() : "changeme123"); // temp default password
+            ps.setString(4, emp.getGender() != null ? emp.getGender() : null);
+            ps.setDate(5, emp.getDob() != null ? new java.sql.Date(emp.getDob().getTime()) : null);
+            ps.setDate(6, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
+            ps.setDouble(7, emp.getSalary());
+            ps.setInt(8, emp.getDepartmentId());
+            ps.setString(9, emp.getDesignation() != null ? emp.getDesignation() : "");
+            ps.setString(10, emp.getQrCode() != null ? emp.getQrCode() : "changeme123"); // temp default password
 
             return ps.executeUpdate() > 0;
 
@@ -65,7 +69,7 @@ public class EmployeeDAOImp implements EmployeeDAO {
     // UPDATE
     @Override
     public boolean updateEmployee(EmployeeDTO emp) {
-        String sql = "UPDATE employees SET full_name = ?, email = ?, phone = ?, hire_date = ?, salary = ?, dept_id = ?, status = ? WHERE emp_id = ?";
+        String sql = "UPDATE employees SET full_name = ?, email = ?, phone = ?, gender = ?, dob = ?, hire_date = ?, salary = ?, dept_id = ?, status = ? WHERE emp_id = ?";
         try (Connection con = Connector.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -74,11 +78,13 @@ public class EmployeeDAOImp implements EmployeeDAO {
             ps.setString(1, fullName.trim());
             ps.setString(2, emp.getEmail());
             ps.setString(3, emp.getPhone());
-            ps.setDate(4, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
-            ps.setDouble(5, emp.getSalary());
-            ps.setInt(6, emp.getDepartmentId());
-            ps.setString(7, emp.getStatus() != null ? emp.getStatus() : "ACTIVE");
-            ps.setInt(8, emp.getEmployeeId());
+            ps.setString(4, emp.getGender() != null ? emp.getGender() : null);
+            ps.setDate(5, emp.getDob() != null ? new java.sql.Date(emp.getDob().getTime()) : null);
+            ps.setDate(6, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
+            ps.setDouble(7, emp.getSalary());
+            ps.setInt(8, emp.getDepartmentId());
+            ps.setString(9, emp.getStatus() != null ? emp.getStatus() : "ACTIVE");
+            ps.setInt(10, emp.getEmployeeId());
 
             return ps.executeUpdate() > 0;
 

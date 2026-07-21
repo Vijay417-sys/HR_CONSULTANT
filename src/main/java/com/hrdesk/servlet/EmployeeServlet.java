@@ -93,6 +93,14 @@ public class EmployeeServlet extends HttpServlet {
             emp.setLastName(request.getParameter("lastName") != null ? request.getParameter("lastName") : "");
             emp.setEmail(request.getParameter("email"));
             emp.setPhone(request.getParameter("phone"));
+            emp.setGender(request.getParameter("gender"));
+            String dobParam = request.getParameter("dob");
+            if (dobParam != null && !dobParam.isEmpty()) {
+                try {
+                    emp.setDob(java.sql.Date.valueOf(dobParam));
+                } catch (Exception ignored) {
+                }
+            }
             emp.setDesignation(
                     request.getParameter("designation") != null ? request.getParameter("designation") : "EMPLOYEE");
             emp.setStatus(request.getParameter("status") != null ? request.getParameter("status") : "ACTIVE");

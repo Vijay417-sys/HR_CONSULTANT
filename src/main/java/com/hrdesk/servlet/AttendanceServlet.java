@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import com.hrdesk.dao.AttendanceDAO;
+import com.hrdesk.dao.EmployeeDAO;
 import com.hrdesk.daoimp.AttendanceDAOImp;
+import com.hrdesk.daoimp.EmployeeDAOImp;
 import com.hrdesk.dto.AttendanceDTO;
+import com.hrdesk.dto.EmployeeDTO;
 import com.hrdesk.dto.User;
 
 import jakarta.servlet.ServletException;
@@ -20,6 +23,7 @@ public class AttendanceServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private final AttendanceDAO attendanceDAO = new AttendanceDAOImp();
+    private final EmployeeDAO employeeDAO = new EmployeeDAOImp();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,11 +48,14 @@ public class AttendanceServlet extends HttpServlet {
         } else if (action.equals("delete")) {
             int delId = Integer.parseInt(request.getParameter("id"));
             attendanceDAO.deleteAttendance(delId);
-            response.sendRedirect(request.getContextPath() + "/attendance?action=list");
+            String redirect = "ADMIN".equals(user.getRole()) ? "list" : "my";
+            response.sendRedirect(request.getContextPath() + "/attendance?action=" + redirect);
         } else {
-            // Admin list all
+            // Admin list all + load employees for mark form
             List<AttendanceDTO> all = attendanceDAO.getAllAttendance();
             request.setAttribute("attendanceList", all);
+            List<EmployeeDTO> employees = employeeDAO.getAllEmployees();
+            request.setAttribute("employeeList", employees);
             request.getRequestDispatcher("/admin/attendance-report.jsp").forward(request, response);
         }
     }
@@ -107,7 +114,10 @@ public class AttendanceServlet extends HttpServlet {
             } else {
                 session.setAttribute("errorMsg", "Failed to mark attendance.");
             }
-            response.sendRedirect(request.getContextPath() + "/attendance?action=list");
+            // Redirect based on role
+            User sessionUser = (User) session.getAttribute("user");
+            String redirectAction = "ADMIN".equals(sessionUser.getRole()) ? "list" : "my";
+            response.sendRedirect(request.getContextPath() + "/attendance?action=" + redirectAction);
         } else {
             doGet(request, response);
         }

@@ -71,6 +71,22 @@
             </div>
             <div class="form-grid">
                 <div class="form-group" style="margin-bottom:0;">
+                    <label class="input-label" for="gender">Gender</label>
+                    <select id="gender" name="gender" class="input-field">
+                        <option value="">Select Gender</option>
+                        <option value="MALE"   <%= isEdit && "MALE".equals(editEmployee.getGender())   ? "selected" : "" %>>Male</option>
+                        <option value="FEMALE" <%= isEdit && "FEMALE".equals(editEmployee.getGender()) ? "selected" : "" %>>Female</option>
+                        <option value="OTHER"  <%= isEdit && "OTHER".equals(editEmployee.getGender())  ? "selected" : "" %>>Other</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="input-label" for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" class="input-field"
+                           value="<%= isEdit && editEmployee.getDob() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(editEmployee.getDob()) : "" %>">
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group" style="margin-bottom:0;">
                     <label class="input-label" for="designation">Designation / Role</label>
                     <input type="text" id="designation" name="designation" class="input-field"
                            placeholder="e.g. Software Engineer"
