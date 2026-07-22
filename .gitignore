@@ -1,0 +1,13 @@
+# Local database config override (not committed)
+src/main/resources/db.local.properties
+
+# Eclipse project metadata
+.metadata/
+
+# Build output
+build/
+target/
+
+# OS files
+.DS_Store
+Thumbs.db

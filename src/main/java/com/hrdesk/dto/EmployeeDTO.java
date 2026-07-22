@@ -1,3 +1,4 @@
+
 package com.hrdesk.dto;
 
 import java.util.Date;

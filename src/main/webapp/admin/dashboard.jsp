@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.hrdesk.dto.User, com.hrdesk.dto.EmployeeDTO, java.util.List" %>
+<%@ page import="com.hrdesk.dto.User, com.hrdesk.dto.EmployeeDTO, com.hrdesk.dto.SupportTokenDTO, java.util.List" %>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null || !"ADMIN".equals(user.getRole())) {
@@ -10,7 +10,7 @@
 <script>document.getElementById('page-title').textContent='Admin Dashboard';document.getElementById('page-breadcrumb').textContent='HRDesk / Admin / Dashboard';</script>
 
 <!-- Stats Row -->
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-7">
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-5 mb-7">
     <!-- Stat Card -->
     <div class="card p-5" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
         <div class="flex items-center justify-between mb-3">
@@ -52,12 +52,23 @@
         <p class="text-2xl font-bold text-gray-900"><%= request.getAttribute("totalDepts") != null ? request.getAttribute("totalDepts") : "—" %></p>
         <p class="text-sm text-gray-400 mt-0.5">Departments</p>
     </div>
+    <!-- Open Tickets Card -->
+    <div class="card p-5" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
+        <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
+                <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+            </div>
+            <span class="badge badge-yellow">Open</span>
+        </div>
+        <p class="text-2xl font-bold text-gray-900"><%= request.getAttribute("openTickets") != null ? request.getAttribute("openTickets") : "—" %></p>
+        <p class="text-sm text-gray-400 mt-0.5">Open Tickets</p>
+    </div>
 </div>
 
 <!-- Quick Actions -->
 <div class="card p-6 mb-7" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
     <h3 class="text-sm font-semibold text-gray-900 mb-4">Quick Actions</h3>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
         <a href="<%= request.getContextPath() %>/employee?action=add" class="flex flex-col items-center gap-2.5 p-4 rounded-xl border border-indigo-100 bg-indigo-50 hover:bg-indigo-100 transition-all text-center group no-underline">
             <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center">
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
@@ -82,6 +93,69 @@
             </div>
             <span class="text-xs font-semibold text-sky-700">Attendance</span>
         </a>
+        <a href="<%= request.getContextPath() %>/support?action=list" class="flex flex-col items-center gap-2.5 p-4 rounded-xl border border-rose-100 bg-rose-50 hover:bg-rose-100 transition-all text-center no-underline">
+            <div class="w-9 h-9 bg-rose-500 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+            </div>
+            <span class="text-xs font-semibold text-rose-700">Support Tickets</span>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Support Tickets -->
+<div class="card mb-7" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h3 class="text-sm font-semibold text-gray-900">Recent Support Tickets</h3>
+        <a href="<%= request.getContextPath() %>/support?action=list" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 no-underline">View All →</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    List<SupportTokenDTO> recentTickets = (List<SupportTokenDTO>) request.getAttribute("recentTickets");
+                    if (recentTickets != null && !recentTickets.isEmpty()) {
+                        for (SupportTokenDTO t : recentTickets) {
+                            String sCss = "OPEN".equals(t.getStatus()) ? "badge-yellow"
+                                        : "IN_PROGRESS".equals(t.getStatus()) ? "badge-blue"
+                                        : "RESOLVED".equals(t.getStatus()) ? "badge-green"
+                                        : "badge-gray";
+                            String pCss = "URGENT".equals(t.getPriority()) ? "badge-red"
+                                        : "HIGH".equals(t.getPriority()) ? "badge-yellow"
+                                        : "MEDIUM".equals(t.getPriority()) ? "badge-blue"
+                                        : "badge-gray";
+                %>
+                <tr>
+                    <td class="text-gray-900 text-sm" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="<%= t.getTitle() != null ? t.getTitle() : "" %>"><%= t.getTitle() != null ? t.getTitle() : "—" %></td>
+                    <td><span class="badge badge-gray"><%= t.getCategory() != null ? t.getCategory() : "—" %></span></td>
+                    <td><span class="badge <%= pCss %>"><%= t.getPriority() != null ? t.getPriority() : "MEDIUM" %></span></td>
+                    <td><span class="badge <%= sCss %>"><%= t.getStatus() != null ? t.getStatus() : "OPEN" %></span></td>
+                    <td class="text-gray-400 text-xs"><%= t.getCreatedAt() != null ? new java.text.SimpleDateFormat("dd-MMM-yy").format(t.getCreatedAt()) : "—" %></td>
+                    <td>
+                        <a href="<%= request.getContextPath() %>/support?action=list" class="text-xs text-indigo-600 hover:underline font-medium no-underline">Manage</a>
+                    </td>
+                </tr>
+                <% } } else { %>
+                <tr>
+                    <td colspan="6" class="py-12 text-center">
+                        <div class="flex flex-col items-center gap-2">
+                            <svg class="w-10 h-10 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                            <p class="text-sm text-gray-400">No tickets yet.</p>
+                        </div>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
     </div>
 </div>
 

@@ -7,12 +7,15 @@ import com.hrdesk.dao.EmployeeDAO;
 import com.hrdesk.dao.AttendanceDAO;
 import com.hrdesk.dao.LeaveDAO;
 import com.hrdesk.dao.DeptDAO;
+import com.hrdesk.dao.SupportTokenDAO;
 import com.hrdesk.daoimp.EmployeeDAOImp;
 import com.hrdesk.daoimp.AttendanceDAOImp;
 import com.hrdesk.daoimp.LeaveDAOImp;
 import com.hrdesk.daoimp.DeptDAOImp;
+import com.hrdesk.daoimp.SupportTokenDAOImp;
 import com.hrdesk.dto.EmployeeDTO;
 import com.hrdesk.dto.LeaveDTO;
+import com.hrdesk.dto.SupportTokenDTO;
 import com.hrdesk.dto.User;
 
 import jakarta.servlet.ServletException;
@@ -31,6 +34,7 @@ public class DashboardServlet extends HttpServlet {
     private final AttendanceDAO attendDAO = new AttendanceDAOImp();
     private final LeaveDAO leaveDAO = new LeaveDAOImp();
     private final DeptDAO deptDAO = new DeptDAOImp();
+    private final SupportTokenDAO supportDAO = new SupportTokenDAOImp();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,6 +65,16 @@ public class DashboardServlet extends HttpServlet {
                     .filter(a -> "PRESENT".equals(((com.hrdesk.dto.AttendanceDTO) a).getAttendanceStatus()))
                     .count();
 
+            // Support ticket stats
+            List<SupportTokenDTO> openTickets = supportDAO.getTokensByStatus("OPEN");
+            int openTicketCount = openTickets.size();
+
+            // Recent 5 tickets for dashboard
+            List<SupportTokenDTO> allTickets = supportDAO.getAllTokens();
+            List<SupportTokenDTO> recentTickets = allTickets.size() > 5
+                    ? allTickets.subList(0, 5)
+                    : allTickets;
+
             // Recent 5 employees for table
             List<EmployeeDTO> recentEmployees = allEmployees.size() > 5
                     ? allEmployees.subList(0, 5)
@@ -70,6 +84,8 @@ public class DashboardServlet extends HttpServlet {
             request.setAttribute("pendingLeaves", pendingLeaveCount);
             request.setAttribute("totalDepts", totalDepts);
             request.setAttribute("presentToday", (int) presentToday);
+            request.setAttribute("openTickets", openTicketCount);
+            request.setAttribute("recentTickets", recentTickets);
             request.setAttribute("recentEmployees", recentEmployees);
 
             request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
