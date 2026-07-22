@@ -7,7 +7,7 @@ public class Connector {
 
     private static final String URL = "jdbc:mysql://localhost:3306/hrdesk_db";
     private static final String DB_USER = "root";
-    private static final String PASSWORD = "Rashivu@246";
+    private static final String PASSWORD = "mysql";
 
     public static Connection getConnection() {
         try {
