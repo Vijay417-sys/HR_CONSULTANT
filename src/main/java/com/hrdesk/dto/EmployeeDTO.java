@@ -1,4 +1,3 @@
-
 package com.hrdesk.dto;
 
 import java.util.Date;
@@ -17,8 +16,8 @@ public class EmployeeDTO {
 	private double salary;
 	private String qrCode;
 	private String status;
-	
-	
+
+
 	public int getEmployeeId() {
 		return employeeId;
 	}
@@ -97,6 +96,14 @@ public class EmployeeDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public String getFullName() {
+		String name = (getFirstName() != null ? getFirstName() : "")
+				+ (getLastName() != null && !getLastName().isEmpty() ? " " + getLastName() : "");
+		return name.trim().isEmpty() ? "Unknown" : name.trim();
+	}
+	public int getDeptId() {
+		return departmentId;
+	}
 	@Override
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", departmentId=" + departmentId + ", firstName=" + firstName
@@ -104,5 +111,5 @@ public class EmployeeDTO {
 				+ ", designation=" + designation + ", hireDate=" + hireDate + ", salary=" + salary + ", qrCode=" + qrCode
 				+ ", status=" + status + "]";
 	}
-	
+
 }

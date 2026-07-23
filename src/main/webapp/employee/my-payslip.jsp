@@ -73,6 +73,12 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 Print / Download
             </button>
+            <% if (latest != null) { %>
+            <a href="<%= request.getContextPath() %>/download-payslip?payrollId=<%= latest.getPayrollId() %>" class="btn-primary w-full justify-center no-underline mt-3" style="justify-content:center;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Download PDF
+            </a>
+            <% } %>
         </div>
     </div>
 
@@ -85,13 +91,16 @@
             <div class="divide-y divide-gray-50">
                 <% if (slips != null && !slips.isEmpty()) {
                     for (PayrollDTO s : slips) { %>
-                <div class="px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <a href="<%= request.getContextPath() %>/download-payslip?payrollId=<%= s.getPayrollId() %>" class="px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors no-underline group">
                     <div>
-                        <p class="text-sm font-medium text-gray-900"><%= s.getPayrollMonth() != null ? s.getPayrollMonth() : "—" %></p>
+                        <p class="text-sm font-medium text-gray-900 group-hover:text-indigo-600"><%= s.getPayrollMonth() != null ? s.getPayrollMonth() : "—" %></p>
                         <p class="text-xs text-gray-400">₹<%= String.format("%,.0f", s.getNetSalary()) %></p>
                     </div>
-                    <span class="badge badge-green">Paid</span>
-                </div>
+                    <span class="badge badge-green group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Download
+                    </span>
+                </a>
                 <% } } else { %>
                 <div class="px-5 py-10 text-center text-sm text-gray-400">No payslips found.</div>
                 <% } %>

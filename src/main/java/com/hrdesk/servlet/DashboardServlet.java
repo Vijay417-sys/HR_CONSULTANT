@@ -8,15 +8,18 @@ import com.hrdesk.dao.AttendanceDAO;
 import com.hrdesk.dao.LeaveDAO;
 import com.hrdesk.dao.DeptDAO;
 import com.hrdesk.dao.SupportTokenDAO;
+import com.hrdesk.dao.PayrollDAO;
 import com.hrdesk.daoimp.EmployeeDAOImp;
 import com.hrdesk.daoimp.AttendanceDAOImp;
 import com.hrdesk.daoimp.LeaveDAOImp;
 import com.hrdesk.daoimp.DeptDAOImp;
 import com.hrdesk.daoimp.SupportTokenDAOImp;
+import com.hrdesk.daoimp.PayrollDAOImp;
 import com.hrdesk.dto.AttendanceDTO;
 import com.hrdesk.dto.EmployeeDTO;
 import com.hrdesk.dto.LeaveDTO;
 import com.hrdesk.dto.SupportTokenDTO;
+import com.hrdesk.dto.PayrollDTO;
 import com.hrdesk.dto.User;
 
 import jakarta.servlet.ServletException;
@@ -36,6 +39,7 @@ public class DashboardServlet extends HttpServlet {
     private final LeaveDAO leaveDAO = new LeaveDAOImp();
     private final DeptDAO deptDAO = new DeptDAOImp();
     private final SupportTokenDAO supportDAO = new SupportTokenDAOImp();
+    private final PayrollDAO payrollDAO = new PayrollDAOImp();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -111,6 +115,11 @@ public class DashboardServlet extends HttpServlet {
             // Monthly salary
             EmployeeDTO empDetails = employeeDAO.getEmployeeById(empId);
             double monthlySalary = (empDetails != null) ? empDetails.getSalary() : 0;
+
+            // Latest payslip for download
+            List<PayrollDTO> payrolls = payrollDAO.getPayrollByEmployee(empId);
+            PayrollDTO latestPayroll = (payrolls != null && !payrolls.isEmpty()) ? payrolls.get(0) : null;
+            if (latestPayroll != null) request.setAttribute("latestPayroll", latestPayroll);
 
             request.setAttribute("presentDays", (int) presentDays);
             request.setAttribute("leaveBalance", (int) leaveBalance);

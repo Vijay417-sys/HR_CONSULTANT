@@ -22,4 +22,6 @@ public interface LeaveDAO {
 
     boolean updateLeaveStatus(int leaveId, String status);
 
+    int countLeaveDays(int empId, String monthYear);
+
 }

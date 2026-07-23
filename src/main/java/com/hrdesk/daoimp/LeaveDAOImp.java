@@ -171,4 +171,18 @@ public class LeaveDAOImp implements LeaveDAO {
             return false;
         }
     }
+	@Override
+	public int countLeaveDays(int empId, String monthYear) {
+		String sql = "SELECT COUNT(*) FROM leave_requests WHERE emp_id = ? AND status = 'APPROVED' AND DATE_FORMAT(start_date, '%Y-%m') = ?";
+		try (Connection con = Connector.getConnection();
+		     PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, empId);
+			ps.setString(2, monthYear);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

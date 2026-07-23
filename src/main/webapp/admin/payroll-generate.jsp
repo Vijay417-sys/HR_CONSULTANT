@@ -44,14 +44,14 @@
             <form action="<%= request.getContextPath() %>/payroll?action=generate" method="post" class="space-y-4">
                 <div>
                     <label class="input-label" for="employeeId">Employee *</label>
-                    <select id="employeeId" name="employeeId" class="input-field" required>
+                    <select id="employeeId" name="employeeId" class="input-field" required onchange="autoFillSalary(this)">
                         <option value="">Select Employee</option>
                         <% if (employees != null) {
                             for (EmployeeDTO emp : employees) {
                                 String empName = (emp.getFirstName() != null ? emp.getFirstName() : "")
                                               + (emp.getLastName() != null && !emp.getLastName().isEmpty() ? " " + emp.getLastName() : "");
                         %>
-                        <option value="<%= emp.getEmployeeId() %>"><%= empName.trim().isEmpty() ? "Emp #" + emp.getEmployeeId() : empName.trim() %></option>
+                        <option value="<%= emp.getEmployeeId() %>" data-salary="<%= emp.getSalary() %>"><%= empName.trim().isEmpty() ? "Emp #" + emp.getEmployeeId() : empName.trim() %></option>
                         <% } } %>
                     </select>
                 </div>
@@ -61,7 +61,8 @@
                 </div>
                 <div>
                     <label class="input-label" for="basicSalary">Basic Salary (₹) *</label>
-                    <input type="number" id="basicSalary" name="basicSalary" class="input-field" placeholder="50000" min="0" step="100" required>
+                    <input type="number" id="basicSalary" name="basicSalary" class="input-field" placeholder="Auto-fills from employee" min="0" step="100" required readonly>
+                    <p class="input-help">Auto-filled from employee's monthly salary. Click the field to edit if needed.</p>
                 </div>
                 <div>
                     <label class="input-label" for="bonus">Bonus (₹)</label>
@@ -146,5 +147,22 @@
         </div>
     </div>
 </div>
+
+<script>
+function autoFillSalary(select) {
+    var salaryInput = document.getElementById('basicSalary');
+    var selected = select.options[select.selectedIndex];
+    if (selected && selected.dataset.salary) {
+        salaryInput.value = selected.dataset.salary;
+        salaryInput.readOnly = true;
+    } else {
+        salaryInput.value = '';
+        salaryInput.readOnly = false;
+    }
+}
+document.getElementById('basicSalary').addEventListener('focus', function() {
+    this.readOnly = false;
+});
+</script>
 
 <%@ include file="../includes/footer.jsp" %>

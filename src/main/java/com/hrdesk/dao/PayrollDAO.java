@@ -11,10 +11,12 @@ public interface PayrollDAO {
 
 	    boolean deletePayroll(int payrollId);
 
+
 	    PayrollDTO getPayrollById(int payrollId);
 
 	    List<PayrollDTO> getPayrollByEmployee(int employeeId);
 
 	    List<PayrollDTO> getAllPayroll();
+	    
 
 }

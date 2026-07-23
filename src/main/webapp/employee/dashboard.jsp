@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.hrdesk.dto.User" %>
+<%@ page import="com.hrdesk.dto.User, com.hrdesk.dto.PayrollDTO" %>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) { response.sendRedirect(request.getContextPath() + "/login"); return; }
@@ -76,15 +76,29 @@
                 <p class="text-xs text-gray-400 mt-1">Request time off</p>
             </div>
         </a>
-        <a href="<%= request.getContextPath() %>/payroll?action=my" class="card p-6 flex flex-col items-center gap-3 text-center hover:border-indigo-300 hover:shadow-md transition-all group no-underline">
-            <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+        <%
+            PayrollDTO latestPayslip = (PayrollDTO) request.getAttribute("latestPayroll");
+        %>
+        <div class="card p-6 flex flex-col items-center gap-3 text-center hover:border-indigo-300 hover:shadow-md transition-all group">
+            <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-xl flex items-center justify-center shadow-sm">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             </div>
             <div>
-                <h4 class="text-sm font-semibold text-gray-900">View Payslip</h4>
-                <p class="text-xs text-gray-400 mt-1">Download salary slip</p>
+                <h4 class="text-sm font-semibold text-gray-900">Payslip</h4>
+                <p class="text-xs text-gray-400 mt-1"><%= latestPayslip != null ? latestPayslip.getPayrollMonth() : "No payslip yet" %></p>
+                <% if (latestPayslip != null) { %>
+                <div class="mt-3 flex gap-2 justify-center">
+                    <a href="<%= request.getContextPath() %>/download-payslip?payrollId=<%= latestPayslip.getPayrollId() %>" class="inline-flex items-center gap-1 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg transition-colors no-underline">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Download PDF
+                    </a>
+                    <a href="<%= request.getContextPath() %>/payroll?action=my" class="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg transition-colors no-underline">View All</a>
+                </div>
+                <% } else { %>
+                <a href="<%= request.getContextPath() %>/payroll?action=my" class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:underline no-underline">View payslip history →</a>
+                <% } %>
             </div>
-        </a>
+        </div>
     </div>
 </div>
 

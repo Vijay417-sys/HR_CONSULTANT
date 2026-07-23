@@ -11,12 +11,24 @@ public class PayrollDTO {
 	private double deduction;
 	private double netSalary;
 	private Date paymentDate;
-	
+
 	public int getPayrollId() {
 		return payrollId;
 	}
 	public void setPayrollId(int payrollId) {
 		this.payrollId = payrollId;
+	}
+	public String getMonthYear() {
+		return payrollMonth;
+	}
+	public void setMonthYear(String monthYear) {
+		this.payrollMonth = monthYear;
+	}
+	public double getLeaveDeductions() {
+		return deduction;
+	}
+	public void setLeaveDeductions(double leaveDeductions) {
+		this.deduction = leaveDeductions;
 	}
 	public int getEmployeeId() {
 		return employeeId;
@@ -24,6 +36,8 @@ public class PayrollDTO {
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
 	}
+	public int getEmpId() { return employeeId; }
+	public void setEmpId(int empId) { this.employeeId = empId; }
 	public String getPayrollMonth() {
 		return payrollMonth;
 	}

@@ -10,6 +10,8 @@ import com.hrdesk.daoimp.EmployeeDAOImp;
 import com.hrdesk.dto.PayrollDTO;
 import com.hrdesk.dto.EmployeeDTO;
 import com.hrdesk.dto.User;
+import com.hrdesk.utility.PDFGenerator;
+import com.hrdesk.utility.EmailUtility;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -100,6 +102,30 @@ public class PayrollServlet extends HttpServlet {
             boolean success = payrollDAO.addPayroll(payroll);
             if (success) {
                 session.setAttribute("successMsg", "Payroll generated successfully.");
+
+                // --- Generate PDF & Send Email ---
+                try {
+                    EmployeeDTO emp = employeeDAO.getEmployeeById(payroll.getEmployeeId());
+                    if (emp != null) {
+                        String pdfPath = PDFGenerator.generatePayslip(emp, payroll);
+                        if (pdfPath != null) {
+                            boolean emailSent = EmailUtility.sendPayslipEmail(
+                                emp.getEmail(),
+                                emp.getFullName(),
+                                payroll.getPayrollMonth(),
+                                pdfPath
+                            );
+                            if (emailSent) {
+                                session.setAttribute("successMsg", "Payroll generated & email sent to " + emp.getEmail());
+                            } else {
+                                session.setAttribute("successMsg", "Payroll generated but email sending failed.");
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    session.setAttribute("errorMsg", "Payroll saved but PDF/Email error: " + e.getMessage());
+                }
             } else {
                 session.setAttribute("errorMsg", "Failed to generate payroll.");
             }
