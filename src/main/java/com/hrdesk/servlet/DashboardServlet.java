@@ -13,6 +13,7 @@ import com.hrdesk.daoimp.AttendanceDAOImp;
 import com.hrdesk.daoimp.LeaveDAOImp;
 import com.hrdesk.daoimp.DeptDAOImp;
 import com.hrdesk.daoimp.SupportTokenDAOImp;
+import com.hrdesk.dto.AttendanceDTO;
 import com.hrdesk.dto.EmployeeDTO;
 import com.hrdesk.dto.LeaveDTO;
 import com.hrdesk.dto.SupportTokenDTO;
@@ -90,7 +91,32 @@ public class DashboardServlet extends HttpServlet {
 
             request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
         } else {
-            // Employee dashboard
+            // Employee dashboard — compute stats for logged-in employee
+            int empId = user.getEmployeeId();
+
+            // Days present
+            List<AttendanceDTO> myAttendance = attendDAO.getAttendanceByEmployee(empId);
+            long presentDays = myAttendance.stream()
+                    .filter(a -> "PRESENT".equals(a.getAttendanceStatus()))
+                    .count();
+            int totalDays = myAttendance.size();
+            int attendancePct = totalDays > 0 ? (int) (presentDays * 100 / totalDays) : 0;
+
+            // Leave balance (total approved leaves taken)
+            List<LeaveDTO> myLeaves = leaveDAO.getLeavesByEmployee(empId);
+            long leaveBalance = myLeaves.stream()
+                    .filter(l -> "APPROVED".equals(l.getLeaveStatus()))
+                    .count();
+
+            // Monthly salary
+            EmployeeDTO empDetails = employeeDAO.getEmployeeById(empId);
+            double monthlySalary = (empDetails != null) ? empDetails.getSalary() : 0;
+
+            request.setAttribute("presentDays", (int) presentDays);
+            request.setAttribute("leaveBalance", (int) leaveBalance);
+            request.setAttribute("monthlySalary", monthlySalary);
+            request.setAttribute("attendancePct", attendancePct);
+
             request.getRequestDispatcher("/employee/dashboard.jsp").forward(request, response);
         }
     }

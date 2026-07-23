@@ -23,6 +23,7 @@
     String errorMsg   = (String) session.getAttribute("errorMsg");
     if (successMsg != null) session.removeAttribute("successMsg");
     if (errorMsg   != null) session.removeAttribute("errorMsg");
+    request.setAttribute("navPage", "attendance");
 
     // Compute stats
     int present = 0, absent = 0, halfDay = 0, leave = 0;

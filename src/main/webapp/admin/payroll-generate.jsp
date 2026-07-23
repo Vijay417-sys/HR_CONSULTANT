@@ -18,6 +18,7 @@
     if (payrolls != null) {
         for (PayrollDTO p : payrolls) totalDisbursed += p.getNetSalary();
     }
+    request.setAttribute("navPage", "payroll");
 %>
 <%@ include file="../includes/header.jsp" %>
 <script>document.getElementById('page-title').textContent='Payroll';document.getElementById('page-breadcrumb').textContent='HRDesk / Admin / Payroll';</script>

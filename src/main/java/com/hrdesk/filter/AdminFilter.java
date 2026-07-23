@@ -33,7 +33,7 @@ public class AdminFilter implements Filter {
         if (user != null && "ADMIN".equals(user.getRole())) {
             chain.doFilter(request, response);
         } else {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
         }
     }
 

@@ -48,13 +48,18 @@ public class LoginServlet extends HttpServlet {
                 // Admin → Admin Dashboard
                 response.sendRedirect(request.getContextPath() + "/dashboard");
             } else {
-                // Auto-mark attendance: PRESENT with current time (NOW()) on login
-                AttendanceDTO att = new AttendanceDTO();
-                att.setEmployeeId(user.getEmployeeId());
-                att.setAttendanceStatus("PRESENT");
-                att.setAttendanceDate(new java.util.Date());
-                att.setCheckIn(new java.sql.Time(System.currentTimeMillis()));
-                attendanceDAO.markAttendance(att);
+                // Auto-mark attendance: only if not already checked in today
+                java.util.Date today = new java.util.Date();
+                boolean alreadyCheckedIn = attendanceDAO.getAttendanceByDate(today).stream()
+                    .anyMatch(a -> a.getEmployeeId() == user.getEmployeeId());
+                if (!alreadyCheckedIn) {
+                    AttendanceDTO att = new AttendanceDTO();
+                    att.setEmployeeId(user.getEmployeeId());
+                    att.setAttendanceStatus("PRESENT");
+                    att.setAttendanceDate(today);
+                    att.setCheckIn(new java.sql.Time(System.currentTimeMillis()));
+                    attendanceDAO.markAttendance(att);
+                }
 
                 // Employee → Employee Dashboard
                 response.sendRedirect(request.getContextPath() + "/employee?action=dashboard");

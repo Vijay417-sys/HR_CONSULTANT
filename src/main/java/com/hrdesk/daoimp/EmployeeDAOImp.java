@@ -54,7 +54,11 @@ public class EmployeeDAOImp implements EmployeeDAO {
             ps.setDate(5, emp.getDob() != null ? new java.sql.Date(emp.getDob().getTime()) : null);
             ps.setDate(6, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
             ps.setDouble(7, emp.getSalary());
-            ps.setInt(8, emp.getDepartmentId());
+            if (emp.getDepartmentId() > 0) {
+                ps.setInt(8, emp.getDepartmentId());
+            } else {
+                ps.setNull(8, java.sql.Types.INTEGER);
+            }
             ps.setString(9, emp.getDesignation() != null ? emp.getDesignation() : "");
             ps.setString(10, emp.getQrCode() != null ? emp.getQrCode() : "changeme123"); // temp default password
 
@@ -69,7 +73,7 @@ public class EmployeeDAOImp implements EmployeeDAO {
     // UPDATE
     @Override
     public boolean updateEmployee(EmployeeDTO emp) {
-        String sql = "UPDATE employees SET full_name = ?, email = ?, phone = ?, gender = ?, dob = ?, hire_date = ?, salary = ?, dept_id = ?, status = ? WHERE emp_id = ?";
+        String sql = "UPDATE employees SET full_name = ?, email = ?, phone = ?, gender = ?, dob = ?, designation = ?, hire_date = ?, salary = ?, dept_id = ?, status = ? WHERE emp_id = ?";
         try (Connection con = Connector.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -80,11 +84,16 @@ public class EmployeeDAOImp implements EmployeeDAO {
             ps.setString(3, emp.getPhone());
             ps.setString(4, emp.getGender() != null ? emp.getGender() : null);
             ps.setDate(5, emp.getDob() != null ? new java.sql.Date(emp.getDob().getTime()) : null);
-            ps.setDate(6, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
-            ps.setDouble(7, emp.getSalary());
-            ps.setInt(8, emp.getDepartmentId());
-            ps.setString(9, emp.getStatus() != null ? emp.getStatus() : "ACTIVE");
-            ps.setInt(10, emp.getEmployeeId());
+            ps.setString(6, emp.getDesignation() != null ? emp.getDesignation() : "");
+            ps.setDate(7, emp.getHireDate() != null ? new java.sql.Date(emp.getHireDate().getTime()) : null);
+            ps.setDouble(8, emp.getSalary());
+            if (emp.getDepartmentId() > 0) {
+                ps.setInt(9, emp.getDepartmentId());
+            } else {
+                ps.setNull(9, java.sql.Types.INTEGER);
+            }
+            ps.setString(10, emp.getStatus() != null ? emp.getStatus() : "ACTIVE");
+            ps.setInt(11, emp.getEmployeeId());
 
             return ps.executeUpdate() > 0;
 

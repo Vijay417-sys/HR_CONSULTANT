@@ -3,7 +3,7 @@
 <%
     User user = (User) session.getAttribute("user");
     if (user != null) {
-        response.sendRedirect(request.getContextPath() + ("ADMIN".equals(user.getRole()) ? "/admin/dashboard.jsp" : "/employee/dashboard.jsp"));
+        response.sendRedirect(request.getContextPath() + "/dashboard");
         return;
     }
 %>

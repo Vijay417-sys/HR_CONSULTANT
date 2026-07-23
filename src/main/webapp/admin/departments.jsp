@@ -11,6 +11,7 @@
     String errorMsg   = (String) session.getAttribute("errorMsg");
     if (successMsg != null) session.removeAttribute("successMsg");
     if (errorMsg   != null) session.removeAttribute("errorMsg");
+    request.setAttribute("navPage", "departments");
 %>
 <%@ include file="../includes/header.jsp" %>
 <script>document.getElementById('page-title').textContent='Departments';document.getElementById('page-breadcrumb').textContent='HRDesk / Admin / Departments';</script>

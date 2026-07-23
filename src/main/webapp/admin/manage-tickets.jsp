@@ -17,6 +17,7 @@
             else if ("CLOSED".equals(t.getStatus()))      closed++;
         }
     }
+    request.setAttribute("navPage", "tickets");
 %>
 <%@ include file="../includes/header.jsp" %>
 <script>document.getElementById('page-title').textContent='Support Tickets';document.getElementById('page-breadcrumb').textContent='HRDesk / Admin / Tickets';</script>

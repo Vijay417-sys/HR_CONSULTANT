@@ -93,7 +93,8 @@ public class EmployeeServlet extends HttpServlet {
             emp.setLastName(request.getParameter("lastName") != null ? request.getParameter("lastName") : "");
             emp.setEmail(request.getParameter("email"));
             emp.setPhone(request.getParameter("phone"));
-            emp.setGender(request.getParameter("gender"));
+            String genderParam = request.getParameter("gender");
+emp.setGender(genderParam != null && !genderParam.trim().isEmpty() ? genderParam.trim() : null);
             String dobParam = request.getParameter("dob");
             if (dobParam != null && !dobParam.isEmpty()) {
                 try {

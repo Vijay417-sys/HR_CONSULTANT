@@ -16,6 +16,7 @@
             else if ("REJECTED".equals(lv.getLeaveStatus())) rejected++;
         }
     }
+    request.setAttribute("navPage", "leave");
 %>
 <%@ include file="../includes/header.jsp" %>
 <script>document.getElementById('page-title').textContent='Leave Requests';document.getElementById('page-breadcrumb').textContent='HRDesk / Admin / Leave Requests';</script>

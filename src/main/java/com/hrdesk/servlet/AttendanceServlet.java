@@ -45,6 +45,20 @@ public class AttendanceServlet extends HttpServlet {
             List<AttendanceDTO> myAttendance = attendanceDAO.getAttendanceByEmployee(user.getEmployeeId());
             request.setAttribute("attendanceList", myAttendance);
             request.getRequestDispatcher("/employee/my-attendance.jsp").forward(request, response);
+        } else if (action.equals("checkout")) {
+            // Employee checks out — set check_out on today's attendance
+            java.util.Date today = new java.util.Date();
+            AttendanceDTO todayAtt = attendanceDAO.getAttendanceByDate(today).stream()
+                .filter(a -> a.getEmployeeId() == user.getEmployeeId())
+                .findFirst().orElse(null);
+            if (todayAtt != null) {
+                todayAtt.setCheckOut(new java.sql.Time(System.currentTimeMillis()));
+                attendanceDAO.updateAttendance(todayAtt);
+                session.setAttribute("successMsg", "Check-out recorded successfully.");
+            } else {
+                session.setAttribute("errorMsg", "No check-in record found for today.");
+            }
+            response.sendRedirect(request.getContextPath() + "/attendance?action=my");
         } else if (action.equals("delete")) {
             int delId = Integer.parseInt(request.getParameter("id"));
             attendanceDAO.deleteAttendance(delId);
