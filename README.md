@@ -87,3 +87,4 @@ Other users can register via the public registration page, which creates EMPLOYE
 ---
 
 Built with ❤️ using Jakarta EE, Servlets, JSP, and MySQL.
+# HR_CONSULTANT
