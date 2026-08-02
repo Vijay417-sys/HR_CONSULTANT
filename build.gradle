@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'javax.activation:activation:1.1.1'
+    implementation 'com.itextpdf:itextpdf:5.5.13.3'
+}
+
+war {
+    archiveFileName = 'HRDesk.war'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
