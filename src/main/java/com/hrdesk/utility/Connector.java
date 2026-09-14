@@ -10,14 +10,16 @@ public class Connector {
     private static final Properties props = new Properties();
 
     static {
-        load("db.properties");                 // committed defaults (no real secrets)
-        load("db.local.properties");           // local overrides — gitignored
+        load("db.properties"); // committed defaults (no real secrets)
+        load("db.local.properties"); // local overrides — gitignored
     }
 
     private static void load(String name) {
         try (InputStream in = Connector.class.getClassLoader().getResourceAsStream(name)) {
-            if (in != null) props.load(in);
-        } catch (Exception ignored) { }
+            if (in != null)
+                props.load(in);
+        } catch (Exception ignored) {
+        }
     }
 
     // env var wins, then properties file

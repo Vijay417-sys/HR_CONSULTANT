@@ -16,10 +16,15 @@ dependencies {
     implementation 'com.itextpdf:itextpdf:5.5.13.3'
 }
 
+
+
+
+
+
 war {
     archiveFileName = 'HRDesk.war'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21

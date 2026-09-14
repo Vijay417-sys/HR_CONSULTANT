@@ -1,19 +1,42 @@
 package com.hrdesk.utility;
 
-import jakarta.mail.*;
-import jakarta.mail.internet.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.BodyPart;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import java.util.Properties;
 
 public class EmailUtility {
 
-    // Your Gmail SMTP settings
-    private static final String HOST = "smtp.gmail.com";
-    private static final String PORT = "587";
-    private static final String USERNAME = "add your own mail";
-    private static final String PASSWORD = "add your own password"; // CHANGE THIS (App Password, not Gmail password)
+    // Read from environment variables; fall back to safe defaults / blanks.
+    // Locally: set these in your .env file (docker run --env-file .env)
+    // In production: injected via GitHub Secrets -> docker run -e
+    private static final String HOST =
+            System.getenv().getOrDefault("MAIL_HOST", "smtp.gmail.com");
+    private static final String PORT =
+            System.getenv().getOrDefault("MAIL_PORT", "587");
+    private static final String USERNAME =
+            System.getenv().getOrDefault("MAIL_USER", "");
+    private static final String PASSWORD =
+            System.getenv().getOrDefault("MAIL_PASSWORD", "");
 
     public static boolean sendPayslipEmail(String toEmail, String employeeName,
             String monthYear, String pdfPath) {
+
+        // Fail fast if mail credentials are not configured
+        if (USERNAME.isBlank() || PASSWORD.isBlank()) {
+            System.err.println("[EmailUtility] MAIL_USER / MAIL_PASSWORD not set. "
+                    + "Skipping email to: " + toEmail);
+            return false;
+        }
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -23,6 +46,7 @@ public class EmailUtility {
         props.put("mail.smtp.ssl.trust", HOST);
 
         Session session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(USERNAME, PASSWORD);
             }
@@ -59,7 +83,8 @@ public class EmailUtility {
             return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[EmailUtility] Failed to send payslip email to "
+                    + toEmail + ": " + e.getMessage());
             return false;
         }
     }
